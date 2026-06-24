@@ -1,0 +1,21 @@
+- name: Download WordPress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/latest.tar.gz
+
+- name: Extract WordPress
+  unarchive:
+    src: /tmp/latest.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy WordPress files
+  shell: |
+    cp -r /tmp/wordpress/* /home/{{ site_user }}/{{ site_name }}/public/
+
+- name: Set ownership
+  file:
+    path: "/home/{{ site_user }}/{{ site_name }}/public"
+    owner: "{{ site_user }}"
+    group: "{{ site_user }}"
+    recurse: yes

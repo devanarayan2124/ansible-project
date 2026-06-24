@@ -1,0 +1,30 @@
+- name: Set home ownership for chroot
+  file:
+    path: "/home/{{ site_user }}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure website directory ownership
+  file:
+    path: "/home/{{ site_user }}/{{ site_name }}"
+    owner: "{{ site_user }}"
+    group: "{{ site_user }}"
+    recurse: yes
+
+- name: Configure SFTP user
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    marker: "# {mark} ANSIBLE SFTP"
+    block: |
+      Match User {{ site_user }}
+          ChrootDirectory /home/{{ site_user }}
+          ForceCommand internal-sftp
+          PasswordAuthentication yes
+          AllowTcpForwarding no
+          X11Forwarding no
+
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted

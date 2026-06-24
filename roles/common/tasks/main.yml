@@ -1,0 +1,23 @@
+- name: Update package cache
+  yum:
+    update_cache: yes
+
+- name: Install common packages
+  yum:
+    name:
+      - nginx
+      - wget
+      - unzip
+      - git
+      - tree
+    state: present
+
+- name: Enable nginx
+  service:
+    name: nginx
+    enabled: yes
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started 

@@ -1,0 +1,21 @@
+- name: Create website user
+  user:
+    name: "{{ site_user }}"
+    password: "{{ site_user_password | password_hash('sha512') }}"
+    create_home: yes
+
+- name: Create website directory
+  file:
+    path: "/home/{{ site_user }}/{{ site_name }}"
+    state: directory
+    owner: "{{ site_user }}"
+    group: "{{ site_user }}"
+    mode: '0755'
+
+- name: Create public directory
+  file:
+    path: "/home/{{ site_user }}/{{ site_name }}/public"
+    state: directory
+    owner: "{{ site_user }}"
+    group: "{{ site_user }}"
+    mode: '0755'

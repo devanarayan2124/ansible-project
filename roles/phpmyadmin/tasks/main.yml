@@ -1,0 +1,21 @@
+- name: Install dependencies
+  dnf:
+    name:
+      - wget
+      - tar
+    state: present
+
+- name: Download phpMyAdmin
+  get_url:
+    url: https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+    dest: /tmp/phpmyadmin.tar.gz
+
+- name: Extract phpMyAdmin
+  unarchive:
+    src: /tmp/phpmyadmin.tar.gz
+    dest: /usr/share
+    remote_src: yes
+
+- name: Create phpmyadmin symlink
+  shell: |
+    ln -sfn $(find /usr/share -maxdepth 1 -type d -name "phpMyAdmin-*") /usr/share/phpmyadmin

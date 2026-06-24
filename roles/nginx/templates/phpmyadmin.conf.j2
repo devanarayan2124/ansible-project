@@ -1,0 +1,12 @@
+location /phpmyadmin {
+    alias /usr/share/phpmyadmin;
+
+    index index.php;
+
+    location ~ ^/phpmyadmin/(.+\.php)$ {
+        alias /usr/share/phpmyadmin/$1;
+        include fastcgi_params;
+        fastcgi_pass unix:/run/php-fpm/www.sock;
+        fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
+    }
+}

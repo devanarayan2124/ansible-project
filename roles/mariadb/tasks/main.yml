@@ -1,0 +1,35 @@
+- name: Install MariaDB packages
+  dnf:
+    name:
+      - mariadb105-server
+      - mariadb105
+      - python3-pip
+    state: present
+
+- name: Install PyMySQL
+  pip:
+    name: pymysql
+
+- name: Enable MariaDB
+  service:
+    name: mariadb
+    enabled: yes
+
+- name: Start MariaDB
+  service:
+    name: mariadb
+    state: started
+
+- name: Create WordPress database
+  community.mysql.mysql_db:
+    name: "{{ wp_db }}"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+
+- name: Create WordPress DB user
+  community.mysql.mysql_user:
+    name: "{{ wp_db_user }}"
+    password: "{{ wp_db_password }}"
+    priv: "{{ wp_db }}.*:ALL"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
